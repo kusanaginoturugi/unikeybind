@@ -1,0 +1,62 @@
+modmap:
+  - name: CapsLock as Ctrl/Esc
+    remap:
+      CapsLock:
+        held: LeftControl
+        alone: Escape
+
+keymap:
+  - name: Global Emacs
+    application:
+      not:
+        - emacs
+        - kitty
+        - dropdown
+        - alacritty
+        - foot
+        - firefox
+        - chromium
+        - code-oss
+        - org.remmina.Remmina
+        - qemu
+    remap:
+      C-p: up
+      C-n: down
+      C-b: left
+      C-f: right
+      C-a: home
+      C-e: end
+      C-h: backspace
+      C-m: enter
+
+  - name: Browser Emacs Navigation
+    application:
+      only:
+        - firefox
+        - chromium
+    remap:
+      C-p: up
+      C-n: down
+      C-b: left
+      C-a: home
+      C-e: end
+      C-h: backspace
+      C-j: linefeed
+
+  - name: Viewer vi
+    application:
+      only:
+        - zathura
+        - org.pwmt.zathura
+        - thunar
+        - org.gnome.Nautilus
+    remap:
+      j: down
+      k: up
+      h: left
+      l: right
+      g: C-home
+      Shift-g: C-end
+      u: pageup
+      d: pagedown
+      slash: C-f
