@@ -1,0 +1,2134 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shortcut Index</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f7f4;
+      --fg: #1f2328;
+      --muted: #687076;
+      --line: #d8dadd;
+      --panel: #ffffff;
+      --accent: #146c74;
+      --chip: #e9efef;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #171a1c;
+        --fg: #eceff1;
+        --muted: #a3adb5;
+        --line: #33383d;
+        --panel: #202427;
+        --accent: #63c7ce;
+        --chip: #283236;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font: 14px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    header {
+      padding: 22px 28px 12px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: var(--muted);
+    }
+    .chip,
+    .filter-chip {
+      padding: 4px 9px;
+      border: 0;
+      border-radius: 7px;
+      background: var(--chip);
+      color: var(--fg);
+      font: inherit;
+      white-space: nowrap;
+    }
+    .filter-chip {
+      cursor: pointer;
+    }
+    .filter-chip:hover,
+    .filter-chip.active {
+      outline: 2px solid var(--accent);
+      outline-offset: -2px;
+    }
+    main { padding: 18px 28px 32px; }
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) repeat(2, minmax(150px, 220px));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .quick-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    input, select {
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 8px 10px;
+      background: var(--panel);
+      color: var(--fg);
+      font: inherit;
+    }
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+    }
+    th, td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      background: var(--panel);
+      color: var(--muted);
+      font-weight: 650;
+      z-index: 1;
+    }
+    tr:last-child td { border-bottom: 0; }
+    code {
+      padding: 2px 5px;
+      border-radius: 5px;
+      background: var(--chip);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+    .muted { color: var(--muted); }
+    .source {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    @media (max-width: 760px) {
+      header, main { padding-left: 14px; padding-right: 14px; }
+      .controls { grid-template-columns: 1fr; }
+      h1 { font-size: 21px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Shortcut Index</h1>
+    <div class="summary" id="summary"></div>
+  </header>
+  <main>
+    <div class="controls">
+      <input id="query" type="search" placeholder="検索: shortcut / action / scope / file">
+      <select id="source"></select>
+      <select id="scope"></select>
+    </div>
+    <div class="quick-filters" id="quick-filters"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>source</th>
+            <th>shortcut</th>
+            <th>action</th>
+            <th>scope</th>
+            <th>note</th>
+            <th>file</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </main>
+  <script type="application/json" id="shortcut-data">[
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "CTRL+Print",
+    "action": "exec hyprshot -m output -z /tmp",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 323,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "Print",
+    "action": "exec hyprshot -m region -z /tmp",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 321,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SHIFT+Print",
+    "action": "exec hyprshot -m window -z /tmp",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 322,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+0",
+    "action": "workspace 10",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 298,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+1",
+    "action": "workspace 1",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 289,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+2",
+    "action": "workspace 2",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 290,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+3",
+    "action": "workspace 3",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 291,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+4",
+    "action": "workspace 4",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 292,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+5",
+    "action": "workspace 5",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 293,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+6",
+    "action": "workspace 6",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 294,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+7",
+    "action": "workspace 7",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 295,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+8",
+    "action": "workspace 8",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 296,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+9",
+    "action": "workspace 9",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 297,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+D",
+    "action": "togglespecialworkspace dropdown",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 268,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+E",
+    "action": "exec thunar",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 270,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+J",
+    "action": "layoutmsg togglesplit",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 275,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+L",
+    "action": "exec dms ipc call lock lock",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 431,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+M",
+    "action": "exec dms ipc call processlist focusOrToggle",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 425,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+P",
+    "action": "pseudo",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 274,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+Q",
+    "action": "killactive",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 267,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+R",
+    "action": "exec dms ipc call spotlight toggle",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 272,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+S",
+    "action": "togglespecialworkspace magic",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 313,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+SHIFT+0",
+    "action": "movetoworkspace 10",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 310,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+SHIFT+1",
+    "action": "movetoworkspace 1",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 301,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+SHIFT+2",
+    "action": "movetoworkspace 2",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 302,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+SHIFT+3",
+    "action": "movetoworkspace 3",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 303,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+SHIFT+4",
+    "action": "movetoworkspace 4",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 304,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+SHIFT+5",
+    "action": "movetoworkspace 5",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 305,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+SHIFT+6",
+    "action": "movetoworkspace 6",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 306,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+SHIFT+7",
+    "action": "movetoworkspace 7",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 307,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+SHIFT+8",
+    "action": "movetoworkspace 8",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 308,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+SHIFT+9",
+    "action": "movetoworkspace 9",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 309,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+SHIFT+S",
+    "action": "movetoworkspace special:magic",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 314,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+T",
+    "action": "exec kitty",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 266,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+V",
+    "action": "togglefloating",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 271,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+Z",
+    "action": "exec dms ipc call powermenu toggle",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 434,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+comma",
+    "action": "exec dms ipc call settings focusOrToggle",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 428,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+down",
+    "action": "movefocus d",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 281,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+h",
+    "action": "movefocus l",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 283,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+j",
+    "action": "movefocus d",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 286,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+k",
+    "action": "movefocus u",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 285,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+l",
+    "action": "movefocus r",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 284,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+left",
+    "action": "movefocus l",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 278,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+mouse:272",
+    "action": "movewindow",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 326,
+    "enabled": true,
+    "directive": "bindm",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+mouse:273",
+    "action": "resizewindow",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 327,
+    "enabled": true,
+    "directive": "bindm",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+mouse_down",
+    "action": "workspace e+1",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 317,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+mouse_up",
+    "action": "workspace e-1",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 318,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+right",
+    "action": "movefocus r",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 279,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "SUPER+up",
+    "action": "movefocus u",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 280,
+    "enabled": true,
+    "directive": "bind",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "XF86AudioLowerVolume",
+    "action": "exec dms ipc call audio decrement 3",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 438,
+    "enabled": true,
+    "directive": "binde",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "XF86AudioLowerVolume",
+    "action": "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 331,
+    "enabled": true,
+    "directive": "bindel",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "XF86AudioMicMute",
+    "action": "exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 333,
+    "enabled": true,
+    "directive": "bindel",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "XF86AudioMute",
+    "action": "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 332,
+    "enabled": true,
+    "directive": "bindel",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "XF86AudioNext",
+    "action": "exec playerctl next",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 338,
+    "enabled": true,
+    "directive": "bindl",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "XF86AudioPause",
+    "action": "exec playerctl play-pause",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 339,
+    "enabled": true,
+    "directive": "bindl",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "XF86AudioPlay",
+    "action": "exec playerctl play-pause",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 340,
+    "enabled": true,
+    "directive": "bindl",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "XF86AudioPrev",
+    "action": "exec playerctl previous",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 341,
+    "enabled": true,
+    "directive": "bindl",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "XF86AudioRaiseVolume",
+    "action": "exec dms ipc call audio increment 3",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 437,
+    "enabled": true,
+    "directive": "binde",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "XF86AudioRaiseVolume",
+    "action": "exec wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 330,
+    "enabled": true,
+    "directive": "bindel",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "XF86MonBrightnessDown",
+    "action": "exec brightnessctl -e4 -n2 set 5%-",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 335,
+    "enabled": true,
+    "directive": "bindel",
+    "note": ""
+  },
+  {
+    "source": "hyprland",
+    "scope": "global",
+    "shortcut": "XF86MonBrightnessUp",
+    "action": "exec brightnessctl -e4 -n2 set 5%+",
+    "file": "~/.config/hypr/hyprland.conf",
+    "line": 334,
+    "enabled": true,
+    "directive": "bindel",
+    "note": ""
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal",
+    "shortcut": "ctrl+shift+e",
+    "action": "open_url_with_hints",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2820,
+    "enabled": true,
+    "directive": "map",
+    "note": "custom; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal",
+    "shortcut": "kmod+[",
+    "action": "previous_tab",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2708,
+    "enabled": true,
+    "directive": "map",
+    "note": "custom; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal",
+    "shortcut": "kmod+]",
+    "action": "next_tab",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2702,
+    "enabled": true,
+    "directive": "map",
+    "note": "custom; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "ctrl+shift+tab",
+    "action": "previous_tab",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2709,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "ctrl+tab",
+    "action": "next_tab",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2703,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+,",
+    "action": "move_tab_backward",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2727,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+.",
+    "action": "move_tab_forward",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2723,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+/",
+    "action": "search_scrollback",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2556,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+0",
+    "action": "tenth_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2677,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+1",
+    "action": "first_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2641,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+2",
+    "action": "second_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2645,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+3",
+    "action": "third_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2649,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+4",
+    "action": "fourth_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2653,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+5",
+    "action": "fifth_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2657,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+6",
+    "action": "sixth_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2661,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+7",
+    "action": "seventh_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2665,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+8",
+    "action": "eighth_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2669,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+9",
+    "action": "ninth_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2673,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+[",
+    "action": "previous_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2621,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+]",
+    "action": "next_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2617,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+`",
+    "action": "move_window_to_top",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2633,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+a>1",
+    "action": "set_background_opacity 1",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2939,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+a>d",
+    "action": "set_background_opacity default",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2943,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+a>l",
+    "action": "set_background_opacity -0.1",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2935,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+a>m",
+    "action": "set_background_opacity +0.1",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2931,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+alt+t",
+    "action": "set_tab_title",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2731,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+b",
+    "action": "move_window_backward",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2629,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+backspace",
+    "action": "change_font_size all 0",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2793,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+c",
+    "action": "copy_to_clipboard",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2431,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+delete",
+    "action": "clear_terminal reset active",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2947,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+down",
+    "action": "scroll_line_down",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2481,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+e",
+    "action": "open_url_with_hints",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2819,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+end",
+    "action": "scroll_end",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2498,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+enter",
+    "action": "new_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2575,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+equal",
+    "action": "change_font_size all +2.0",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2782,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+escape",
+    "action": "kitty_shell window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2924,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+f",
+    "action": "move_window_forward",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2625,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+f1",
+    "action": "show_kitty_doc overview",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2900,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+f10",
+    "action": "toggle_maximized",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2912,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+f11",
+    "action": "toggle_fullscreen",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2908,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+f2",
+    "action": "edit_config_file",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2920,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+f3",
+    "action": "command_palette",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2904,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+f5",
+    "action": "load_config_file",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 3009,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+f6",
+    "action": "debug_config",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 3025,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+f7",
+    "action": "focus_visible_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2681,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+f8",
+    "action": "swap_with_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2691,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+g",
+    "action": "show_last_command_output",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2529,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+h",
+    "action": "show_scrollback",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2515,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+home",
+    "action": "scroll_home",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2494,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+j",
+    "action": "scroll_line_down",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2482,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+k",
+    "action": "scroll_line_up",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2477,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+kp_add",
+    "action": "change_font_size all +2.0",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2784,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+kp_subtract",
+    "action": "change_font_size all -2.0",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2789,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+l",
+    "action": "next_layout",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2755,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+left",
+    "action": "previous_tab",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2707,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+minus",
+    "action": "change_font_size all -2.0",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2788,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+n",
+    "action": "new_os_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2605,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+o",
+    "action": "pass_selection_to_program",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2455,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+p>c",
+    "action": "kitten choose-files",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2841,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+p>d",
+    "action": "kitten choose-files --mode=dir",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2849,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+p>f",
+    "action": "kitten hints --type path --program -",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2827,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+p>h",
+    "action": "kitten hints --type hash --program -",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2870,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+p>l",
+    "action": "kitten hints --type line --program -",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2857,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+p>n",
+    "action": "kitten hints --type linenum",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2878,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+p>shift+f",
+    "action": "kitten hints --type path",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2835,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+p>w",
+    "action": "kitten hints --type word --program -",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2864,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+p>y",
+    "action": "kitten hints --type hyperlink",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2885,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+page_down",
+    "action": "scroll_page_down",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2490,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+page_up",
+    "action": "scroll_page_up",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2486,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+plus",
+    "action": "change_font_size all +2.0",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2783,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+q",
+    "action": "close_tab",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2717,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+r",
+    "action": "start_resizing_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2637,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+right",
+    "action": "next_tab",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2701,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+s",
+    "action": "paste_from_selection",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2450,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+t",
+    "action": "new_tab",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2713,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+u",
+    "action": "kitten unicode_input",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2916,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+up",
+    "action": "scroll_line_up",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2476,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+v",
+    "action": "paste_from_clipboard",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2446,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+w",
+    "action": "close_window",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2613,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+x",
+    "action": "scroll_to_prompt 1",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2511,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "kmod+z",
+    "action": "scroll_to_prompt -1",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2502,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "kitty",
+    "scope": "terminal default",
+    "shortcut": "shift+insert",
+    "action": "paste_from_selection",
+    "file": "~/.config/kitty/kitty.conf",
+    "line": 2451,
+    "enabled": false,
+    "directive": "map",
+    "note": "default from commented kitty.conf; kmod = kitty_mod = ctrl+shift"
+  },
+  {
+    "source": "xremap",
+    "scope": "global",
+    "shortcut": "CapsLock (alone)",
+    "action": "Escape",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "modmap",
+    "note": "CapsLock as Ctrl/Esc"
+  },
+  {
+    "source": "xremap",
+    "scope": "global",
+    "shortcut": "CapsLock (held)",
+    "action": "LeftControl",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "modmap",
+    "note": "CapsLock as Ctrl/Esc"
+  },
+  {
+    "source": "xremap",
+    "scope": "not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu",
+    "shortcut": "C-a",
+    "action": "home",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Global Emacs"
+  },
+  {
+    "source": "xremap",
+    "scope": "not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu",
+    "shortcut": "C-b",
+    "action": "left",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Global Emacs"
+  },
+  {
+    "source": "xremap",
+    "scope": "not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu",
+    "shortcut": "C-e",
+    "action": "end",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Global Emacs"
+  },
+  {
+    "source": "xremap",
+    "scope": "not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu",
+    "shortcut": "C-f",
+    "action": "right",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Global Emacs"
+  },
+  {
+    "source": "xremap",
+    "scope": "not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu",
+    "shortcut": "C-h",
+    "action": "backspace",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Global Emacs"
+  },
+  {
+    "source": "xremap",
+    "scope": "not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu",
+    "shortcut": "C-m",
+    "action": "shift-enter",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Global Emacs"
+  },
+  {
+    "source": "xremap",
+    "scope": "not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu",
+    "shortcut": "C-n",
+    "action": "down",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Global Emacs"
+  },
+  {
+    "source": "xremap",
+    "scope": "not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu",
+    "shortcut": "C-p",
+    "action": "up",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Global Emacs"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: firefox, chromium",
+    "shortcut": "C-a",
+    "action": "home",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Browser Emacs Navigation"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: firefox, chromium",
+    "shortcut": "C-b",
+    "action": "left",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Browser Emacs Navigation"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: firefox, chromium",
+    "shortcut": "C-e",
+    "action": "end",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Browser Emacs Navigation"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: firefox, chromium",
+    "shortcut": "C-h",
+    "action": "backspace",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Browser Emacs Navigation"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: firefox, chromium",
+    "shortcut": "C-j",
+    "action": "linefeed",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Browser Emacs Navigation"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: firefox, chromium",
+    "shortcut": "C-n",
+    "action": "down",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Browser Emacs Navigation"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: firefox, chromium",
+    "shortcut": "C-p",
+    "action": "up",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Browser Emacs Navigation"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: zathura, org.pwmt.zathura, thunar, org.gnome.Nautilus",
+    "shortcut": "Shift-g",
+    "action": "C-end",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Viewer vi"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: zathura, org.pwmt.zathura, thunar, org.gnome.Nautilus",
+    "shortcut": "d",
+    "action": "pagedown",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Viewer vi"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: zathura, org.pwmt.zathura, thunar, org.gnome.Nautilus",
+    "shortcut": "g",
+    "action": "C-home",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Viewer vi"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: zathura, org.pwmt.zathura, thunar, org.gnome.Nautilus",
+    "shortcut": "h",
+    "action": "left",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Viewer vi"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: zathura, org.pwmt.zathura, thunar, org.gnome.Nautilus",
+    "shortcut": "j",
+    "action": "down",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Viewer vi"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: zathura, org.pwmt.zathura, thunar, org.gnome.Nautilus",
+    "shortcut": "k",
+    "action": "up",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Viewer vi"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: zathura, org.pwmt.zathura, thunar, org.gnome.Nautilus",
+    "shortcut": "l",
+    "action": "right",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Viewer vi"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: zathura, org.pwmt.zathura, thunar, org.gnome.Nautilus",
+    "shortcut": "slash",
+    "action": "C-f",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Viewer vi"
+  },
+  {
+    "source": "xremap",
+    "scope": "only: zathura, org.pwmt.zathura, thunar, org.gnome.Nautilus",
+    "shortcut": "u",
+    "action": "pageup",
+    "file": "~/.config/xremap/config.yaml",
+    "line": 0,
+    "enabled": true,
+    "directive": "keymap",
+    "note": "Viewer vi"
+  }
+]</script>
+  <script>
+    const shortcuts = JSON.parse(document.getElementById('shortcut-data').textContent);
+    const query = document.getElementById('query');
+    const source = document.getElementById('source');
+    const scope = document.getElementById('scope');
+    const rows = document.getElementById('rows');
+    const summary = document.getElementById('summary');
+    const quickFilters = document.getElementById('quick-filters');
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+
+    function optionList(values, label) {
+      return [`<option value="">${label}</option>`]
+        .concat([...new Set(values)].sort().map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`))
+        .join('');
+    }
+
+    function renderSummary(items) {
+      const counts = shortcuts.reduce((acc, item) => {
+        acc[item.source] = (acc[item.source] || 0) + 1;
+        return acc;
+      }, {});
+      summary.innerHTML = [
+        `<span class="chip">total ${shortcuts.length}</span>`,
+        ...Object.entries(counts).sort().map(([name, count]) => `<button class="filter-chip" type="button" data-filter="source" data-value="${escapeHtml(name)}" translate="no">${escapeHtml(name)} ${count}</button>`),
+        `<span class="chip">shown ${items.length}</span>`
+      ].join('');
+    }
+
+    function renderQuickFilters() {
+      const sources = [...new Set(shortcuts.map(item => item.source))].sort();
+      const scopes = [...new Set(shortcuts.map(item => item.scope))].sort();
+      quickFilters.innerHTML = [
+        `<button class="filter-chip" type="button" data-filter="clear" data-value="">すべて</button>`,
+        ...sources.map(value => `<button class="filter-chip" type="button" data-filter="source" data-value="${escapeHtml(value)}" translate="no">${escapeHtml(value)}</button>`),
+        ...scopes.map(value => `<button class="filter-chip" type="button" data-filter="scope" data-value="${escapeHtml(value)}" translate="no">${escapeHtml(value)}</button>`)
+      ].join('');
+    }
+
+    function applyFilter(filterKind, value) {
+      if (filterKind === 'clear') {
+        query.value = '';
+        source.value = '';
+        scope.value = '';
+      } else if (filterKind === 'source') {
+        source.value = value;
+      } else if (filterKind === 'scope') {
+        scope.value = value;
+      }
+      render();
+    }
+
+    function syncActiveChips() {
+      document.querySelectorAll('.filter-chip[data-filter]').forEach(button => {
+        const filterKind = button.dataset.filter;
+        const value = button.dataset.value;
+        const active = (filterKind === 'source' && source.value === value) ||
+          (filterKind === 'scope' && scope.value === value) ||
+          (filterKind === 'clear' && !source.value && !scope.value && !query.value);
+        button.classList.toggle('active', active);
+      });
+    }
+
+    function render() {
+      const q = query.value.trim().toLowerCase();
+      const src = source.value;
+      const scp = scope.value;
+      const filtered = shortcuts.filter(item => {
+        if (src && item.source !== src) return false;
+        if (scp && item.scope !== scp) return false;
+        if (!q) return true;
+        return [item.source, item.scope, item.shortcut, item.action, item.note, item.file]
+          .join(' ')
+          .toLowerCase()
+          .includes(q);
+      });
+
+      rows.innerHTML = filtered.map(item => `
+        <tr>
+          <td translate="no"><button class="filter-chip source" type="button" data-filter="source" data-value="${escapeHtml(item.source)}">${escapeHtml(item.source)}</button></td>
+          <td translate="no"><code>${escapeHtml(item.shortcut)}</code></td>
+          <td translate="no">${escapeHtml(item.action)}</td>
+          <td translate="no"><button class="filter-chip" type="button" data-filter="scope" data-value="${escapeHtml(item.scope)}">${escapeHtml(item.scope)}</button></td>
+          <td class="muted" translate="no">${escapeHtml(item.note)}</td>
+          <td class="muted" translate="no">${escapeHtml(item.file)}${item.line ? ':' + item.line : ''}</td>
+        </tr>
+      `).join('');
+      renderSummary(filtered);
+      syncActiveChips();
+    }
+
+    source.innerHTML = optionList(shortcuts.map(item => item.source), 'all sources');
+    scope.innerHTML = optionList(shortcuts.map(item => item.scope), 'all scopes');
+    renderQuickFilters();
+    document.addEventListener('click', event => {
+      const button = event.target.closest('.filter-chip[data-filter]');
+      if (!button) return;
+      applyFilter(button.dataset.filter, button.dataset.value);
+    });
+    [query, source, scope].forEach(el => el.addEventListener('input', render));
+    render();
+  </script>
+</body>
+</html>
