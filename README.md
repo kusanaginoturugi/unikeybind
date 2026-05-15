@@ -30,6 +30,8 @@ Linuxデスクトップのキーバインドを、用途ごとに一貫した操
 - Hyprland: `~/.config/hypr/hyprland.conf` と `source = ...` で読み込まれる設定の `bind*`
 - xremap: `~/.config/xremap/config.yaml` の `modmap` / `keymap`
 - kitty: `~/.config/kitty/kitty.conf` の有効な `map` と、コメント化されたデフォルト `# map`
+- fcitx5: `~/.config/fcitx5/config` と `~/.config/fcitx5/conf/*.conf` の有効なホットキー
+- 既知カタログ: `shortcut_catalog.yaml` に記録した、GTK など設定ファイルから見えにくいショートカット
 
 実行:
 
@@ -39,6 +41,16 @@ ruby shortcut_app.rb --json shortcut_report.json
 
 生成される `shortcut_report.html` をブラウザで開くと、source / scope / shortcut / action / file で検索できます。
 source / scope のチップをクリックすると、その条件で絞り込めます。
+
+ショートカット単位で重複や空き候補を確認したい場合は、Markdown の解析レポートも出力できます。
+
+```sh
+ruby shortcut_app.rb --json shortcut_report.json --analysis shortcut_analysis.md
+```
+
+解析レポートでは、表記ゆれを正規化したうえで、同一スコープ内の有効な重複、スコープをまたぐ重複、無効化された kitty デフォルトを含めた重複、`SUPER` 系の実用的な空き候補を確認できます。
+
+GTK の Emoji chooser や fcitx5 Clipboard アドオンの既知デフォルトのように、ユーザー設定から機械抽出しにくいものは `shortcut_catalog.yaml` に出典メモつきで追加します。実機で有効な fcitx5 設定は `fcitx5` source として別に抽出され、カタログ上の既知デフォルトは `enabled: false` で「可能性のある衝突」として扱えます。
 
 ## 方針
 

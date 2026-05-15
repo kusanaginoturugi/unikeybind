@@ -5,6 +5,7 @@ require "fileutils"
 require "json"
 require "optparse"
 require "pathname"
+require "set"
 require "yaml"
 
 Shortcut = Struct.new(
@@ -23,6 +24,67 @@ Shortcut = Struct.new(
 DEFAULT_HYPRLAND = File.expand_path("~/.config/hypr/hyprland.conf")
 DEFAULT_XREMAP = File.expand_path("~/.config/xremap/config.yaml")
 DEFAULT_KITTY = File.expand_path("~/.config/kitty/kitty.conf")
+DEFAULT_FCITX5 = File.expand_path("~/.config/fcitx5")
+DEFAULT_CATALOG = "shortcut_catalog.yaml"
+COMMON_MOD_SETS = [
+  "SUPER",
+  "SUPER+SHIFT",
+  "SUPER+CTRL",
+  "SUPER+ALT"
+].freeze
+COMMON_KEYS = [
+  *("A".."Z").to_a,
+  *("0".."9").to_a,
+  "LEFT",
+  "RIGHT",
+  "UP",
+  "DOWN",
+  "HOME",
+  "END",
+  "PAGE_UP",
+  "PAGE_DOWN",
+  *Array.new(12) { |index| "F#{index + 1}" }
+].freeze
+MOD_ALIASES = {
+  "C" => "CTRL",
+  "CONTROL" => "CTRL",
+  "CTRL" => "CTRL",
+  "M" => "ALT",
+  "A" => "ALT",
+  "ALT" => "ALT",
+  "S" => "SHIFT",
+  "SHIFT" => "SHIFT",
+  "SUPER" => "SUPER",
+  "WIN" => "SUPER",
+  "META" => "SUPER",
+  "CMD" => "SUPER",
+  "KMOD" => "KMOD"
+}.freeze
+MOD_ORDER = {
+  "CTRL" => 0,
+  "ALT" => 1,
+  "SHIFT" => 2,
+  "SUPER" => 3,
+  "KMOD" => 4
+}.freeze
+KEY_ALIASES = {
+  "," => "COMMA",
+  ";" => "SEMICOLON",
+  "." => "PERIOD",
+  "/" => "SLASH",
+  "`" => "GRAVE",
+  "[" => "LEFT_BRACKET",
+  "]" => "RIGHT_BRACKET",
+  "-" => "MINUS",
+  "=" => "EQUAL",
+  "RETURN" => "ENTER",
+  "PGUP" => "PAGE_UP",
+  "PGDN" => "PAGE_DOWN",
+  "PAGEUP" => "PAGE_UP",
+  "PAGEDOWN" => "PAGE_DOWN",
+  "ESC" => "ESCAPE",
+  "SEMICOLON" => "SEMICOLON"
+}.freeze
 
 def strip_comment(line)
   escaped = false
@@ -61,6 +123,38 @@ def join_shortcut(mods, key)
   normalized = normalize_mods(mods)
   key = key.to_s.strip
   normalized.empty? ? key : "#{normalized}+#{key}"
+end
+
+def normalize_key_name(value)
+  key = value.to_s.strip
+  key = key.upcase unless key.match?(/[a-z].*[A-Z]|[A-Z].*[a-z]/)
+  KEY_ALIASES.fetch(key.upcase, key.upcase)
+end
+
+def normalize_chord(value)
+  text = value.to_s.strip
+  return "" if text.empty?
+
+  text = text.gsub(/\b(C|M|A|S)-(?=[^-+\s]+)/i) { "#{Regexp.last_match(1)}+" }
+  text = text.gsub(/\b(Ctrl|Control|Alt|Shift|Super|Win|Meta|Cmd)-(?=[^-+\s]+)/i) { "#{Regexp.last_match(1)}+" }
+  parts = text.split("+").map(&:strip).reject(&:empty?)
+  return normalize_key_name(text) if parts.length <= 1
+
+  mods = []
+  key_parts = []
+  parts.each_with_index do |part, index|
+    canonical_mod = MOD_ALIASES[part.upcase]
+    if canonical_mod && index < parts.length - 1
+      mods << canonical_mod
+    else
+      key_parts << normalize_key_name(part)
+    end
+  end
+  ([*mods.uniq.sort_by { |mod| MOD_ORDER.fetch(mod, 99) }, key_parts.join("+")]).reject(&:empty?).join("+")
+end
+
+def normalize_shortcut(value)
+  value.to_s.split(">").map { |part| normalize_chord(part) }.join(">")
 end
 
 def parse_csvish(value, max_parts = 4)
@@ -275,12 +369,221 @@ def parse_kitty(path)
   shortcuts
 end
 
+def parse_fcitx5_hotkey_value(value)
+  value.to_s.split(",").map(&:strip).reject(&:empty?)
+end
+
+def fcitx5_hotkey_entry?(section, key)
+  return key.match?(/^\d+$/) if section.start_with?("Hotkey/") || section.match?(/(?:Page.*Key|Cursor)/)
+
+  return %w[
+    TriggerKeys
+    ActivateKeys
+    DeactivateKeys
+    AltTriggerKeys
+    EnumerateForwardKeys
+    EnumerateBackwardKeys
+    EnumerateGroupForwardKeys
+    EnumerateGroupBackwardKeys
+  ].include?(key) if section == "Hotkey"
+
+  %w[TriggerKey PastePrimaryKey].include?(key)
+end
+
+def parse_fcitx5_file(path)
+  return [] unless File.file?(path)
+
+  shortcuts = []
+  section = "global"
+  comments = []
+  File.readlines(path, chomp: true, encoding: "UTF-8").each_with_index do |raw_line, index|
+    line = raw_line.strip
+    if line.start_with?("#")
+      comments << line.delete_prefix("#").strip
+      next
+    end
+
+    next if line.empty?
+
+    if (match = line.match(/^\[(.+)\]$/))
+      section = match[1]
+      comments = []
+      next
+    end
+
+    match = line.match(/^([^=]+)=(.*)$/)
+    next unless match
+
+    key = match[1].strip
+    next unless fcitx5_hotkey_entry?(section, key)
+
+    values = parse_fcitx5_hotkey_value(match[2])
+    next if values.empty?
+
+    action = comments.last.to_s.empty? ? "#{section} #{key}" : comments.last
+    values.each do |shortcut|
+      shortcuts << Shortcut.new(
+        source: "fcitx5",
+        scope: section.start_with?("Hotkey") ? "ime hotkey" : "ime addon",
+        shortcut: shortcut,
+        action: action,
+        file: display_path(path),
+        line: index + 1,
+        enabled: true,
+        directive: key,
+        note: section
+      )
+    end
+    comments = []
+  end
+  shortcuts
+end
+
+def parse_fcitx5(root)
+  root = File.expand_path(root)
+  paths = [
+    File.join(root, "config"),
+    *Dir.glob(File.join(root, "conf", "*.conf")).reject { |path| File.basename(path) == "cached_layouts" }
+  ]
+  paths.flat_map { |path| parse_fcitx5_file(path) }
+end
+
+def parse_catalog(path)
+  return [] unless path && File.file?(path)
+
+  data = YAML.safe_load_file(path, permitted_classes: [Symbol], aliases: true) || []
+  entries = data.is_a?(Hash) ? Array(data["shortcuts"]) : Array(data)
+  entries.map do |entry|
+    Shortcut.new(
+      source: entry.fetch("source"),
+      scope: entry.fetch("scope", "known default"),
+      shortcut: entry.fetch("shortcut"),
+      action: entry.fetch("action", ""),
+      file: display_path(path),
+      line: 0,
+      enabled: entry.fetch("enabled", true),
+      directive: entry.fetch("directive", "catalog"),
+      note: entry.fetch("note", "")
+    )
+  end
+end
+
 def collect_shortcuts(paths)
   [
     *parse_hyprland(paths[:hyprland]),
     *parse_xremap(paths[:xremap]),
-    *parse_kitty(paths[:kitty])
+    *parse_kitty(paths[:kitty]),
+    *parse_fcitx5(paths[:fcitx5]),
+    *parse_catalog(paths[:catalog])
   ].sort_by { |item| [item.source, item.scope, item.shortcut, item.action] }
+end
+
+def shortcut_location(shortcut)
+  line = shortcut.line.to_i
+  line.positive? ? "#{shortcut.file}:#{line}" : shortcut.file.to_s
+end
+
+def shortcut_label(shortcut)
+  status = shortcut.enabled ? "enabled" : "disabled"
+  note = shortcut.note.to_s.empty? ? "" : " / #{shortcut.note}"
+  "- `#{shortcut.shortcut}` -> #{shortcut.action} (#{shortcut.source}, #{shortcut.scope}, #{status}, #{shortcut_location(shortcut)}#{note})"
+end
+
+def grouped_duplicates(shortcuts, include_disabled: false, scoped: true)
+  items = include_disabled ? shortcuts : shortcuts.select(&:enabled)
+  groups = items.group_by do |shortcut|
+    key = normalize_shortcut(shortcut.shortcut)
+    scoped ? [shortcut.scope, key] : key
+  end
+  groups.select { |_key, members| members.length > 1 }
+        .sort_by { |key, members| [key.to_s, members.length] }
+end
+
+def available_shortcuts(shortcuts, scope: "global", limit: 80)
+  used = shortcuts.select { |shortcut| shortcut.enabled && shortcut.scope == scope }
+                  .map { |shortcut| normalize_shortcut(shortcut.shortcut) }
+                  .to_set
+  candidates = COMMON_MOD_SETS.product(COMMON_KEYS).map { |mods, key| "#{mods}+#{key}" }
+  candidates.reject { |candidate| used.include?(normalize_shortcut(candidate)) }.first(limit)
+end
+
+def render_analysis(shortcuts)
+  active_duplicates = grouped_duplicates(shortcuts, scoped: true)
+  cross_scope_duplicates = grouped_duplicates(shortcuts, scoped: false)
+                             .select { |_key, members| members.map(&:scope).uniq.length > 1 }
+  all_duplicates = grouped_duplicates(shortcuts, include_disabled: true, scoped: true)
+  possible_overlaps = grouped_duplicates(shortcuts, include_disabled: true, scoped: false)
+                      .select { |_key, members| members.map(&:scope).uniq.length > 1 }
+  global_available = available_shortcuts(shortcuts)
+
+  lines = []
+  lines << "# Shortcut Analysis"
+  lines << ""
+  lines << "- total: #{shortcuts.length}"
+  lines << "- enabled: #{shortcuts.count(&:enabled)}"
+  lines << "- disabled/default: #{shortcuts.count { |shortcut| !shortcut.enabled }}"
+  lines << "- duplicate active shortcuts in same scope: #{active_duplicates.length}"
+  lines << "- duplicate active shortcuts across scopes: #{cross_scope_duplicates.length}"
+  lines << "- duplicate shortcuts including disabled/defaults: #{all_duplicates.length}"
+  lines << "- possible overlaps including disabled/defaults: #{possible_overlaps.length}"
+  lines << ""
+  lines << "## Same-scope duplicates"
+  lines << ""
+  if active_duplicates.empty?
+    lines << "No enabled duplicates found in the same scope."
+  else
+    active_duplicates.each do |(scope, key), members|
+      lines << "### `#{key}` in `#{scope}`"
+      members.each { |shortcut| lines << shortcut_label(shortcut) }
+      lines << ""
+    end
+  end
+  lines << ""
+  lines << "## Cross-scope duplicates"
+  lines << ""
+  if cross_scope_duplicates.empty?
+    lines << "No enabled duplicates found across scopes."
+  else
+    cross_scope_duplicates.each do |key, members|
+      next if members.map(&:scope).uniq.length < 2
+
+      lines << "### `#{key}`"
+      members.each { |shortcut| lines << shortcut_label(shortcut) }
+      lines << ""
+    end
+  end
+  lines << ""
+  lines << "## Duplicates including disabled/defaults"
+  lines << ""
+  if all_duplicates.empty?
+    lines << "No duplicates found when disabled/default entries are included."
+  else
+    all_duplicates.each do |(scope, key), members|
+      lines << "### `#{key}` in `#{scope}`"
+      members.each { |shortcut| lines << shortcut_label(shortcut) }
+      lines << ""
+    end
+  end
+  lines << ""
+  lines << "## Potential overlaps including disabled/defaults"
+  lines << ""
+  if possible_overlaps.empty?
+    lines << "No cross-scope overlaps found when disabled/default entries are included."
+  else
+    possible_overlaps.each do |key, members|
+      lines << "### `#{key}`"
+      members.each { |shortcut| lines << shortcut_label(shortcut) }
+      lines << ""
+    end
+  end
+  lines << ""
+  lines << "## Available global candidates"
+  lines << ""
+  lines << "Candidate space: #{COMMON_MOD_SETS.join(', ')} x #{COMMON_KEYS.length} common keys. This is a practical search space, not proof that every omitted key is globally safe."
+  lines << ""
+  global_available.each { |shortcut| lines << "- `#{shortcut}`" }
+  lines << ""
+  lines.join("\n")
 end
 
 def render_html(shortcuts)
@@ -569,8 +872,11 @@ options = {
   hyprland: DEFAULT_HYPRLAND,
   xremap: DEFAULT_XREMAP,
   kitty: DEFAULT_KITTY,
+  fcitx5: DEFAULT_FCITX5,
+  catalog: DEFAULT_CATALOG,
   html: "shortcut_report.html",
-  json: nil
+  json: nil,
+  analysis: nil
 }
 
 OptionParser.new do |parser|
@@ -578,8 +884,11 @@ OptionParser.new do |parser|
   parser.on("--hyprland PATH", "Hyprland config path") { |value| options[:hyprland] = File.expand_path(value) }
   parser.on("--xremap PATH", "xremap config path") { |value| options[:xremap] = File.expand_path(value) }
   parser.on("--kitty PATH", "kitty config path") { |value| options[:kitty] = File.expand_path(value) }
+  parser.on("--fcitx5 PATH", "fcitx5 config directory") { |value| options[:fcitx5] = File.expand_path(value) }
+  parser.on("--catalog PATH", "Known shortcut catalog YAML") { |value| options[:catalog] = value }
   parser.on("--html PATH", "Write searchable HTML report") { |value| options[:html] = value }
   parser.on("--json PATH", "Write collected data as JSON") { |value| options[:json] = value }
+  parser.on("--analysis PATH", "Write duplicate/free-candidate analysis as Markdown") { |value| options[:analysis] = value }
   parser.on("--no-html", "Do not write HTML") { options[:html] = nil }
 end.parse!
 
@@ -595,6 +904,12 @@ if options[:html]
   File.write(options[:html], render_html(shortcuts))
 end
 
+if options[:analysis]
+  FileUtils.mkdir_p(File.dirname(options[:analysis])) unless File.dirname(options[:analysis]) == "."
+  File.write(options[:analysis], render_analysis(shortcuts))
+end
+
 puts "Collected #{shortcuts.length} shortcuts"
 puts "HTML: #{options[:html]}" if options[:html]
 puts "JSON: #{options[:json]}" if options[:json]
+puts "Analysis: #{options[:analysis]}" if options[:analysis]

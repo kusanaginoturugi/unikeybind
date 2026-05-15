@@ -1,0 +1,25 @@
+# Known shortcuts that are not reliably discoverable from local user config.
+# Keep these entries source-backed and conservative. `enabled: false` means
+# "known default or possible binding", not necessarily active on this machine.
+shortcuts:
+  - source: gtk
+    scope: gtk text input
+    shortcut: Ctrl+.
+    action: open emoji chooser
+    enabled: true
+    directive: GtkTextView::insert-emoji
+    note: "GTK 4 default binding for Gtk.TextView::insert-emoji; https://docs.gtk.org/gtk4/signal.TextView.insert-emoji.html"
+  - source: gtk
+    scope: gtk text input
+    shortcut: Ctrl+;
+    action: open emoji chooser
+    enabled: true
+    directive: GtkTextView::insert-emoji
+    note: "GTK 4 default binding for Gtk.TextView::insert-emoji; https://docs.gtk.org/gtk4/signal.TextView.insert-emoji.html"
+  - source: fcitx5-default
+    scope: ime addon default
+    shortcut: Control+semicolon
+    action: open clipboard history
+    enabled: false
+    directive: Clipboard TriggerKey
+    note: "Known fcitx5 Clipboard add-on default; local ~/.config/fcitx5/conf/clipboard.conf may override it"
