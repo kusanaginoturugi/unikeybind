@@ -512,7 +512,37 @@ def available_shortcuts(shortcuts, scope: "global", limit: 80)
   candidates.reject { |candidate| used.include?(normalize_shortcut(candidate)) }.first(limit)
 end
 
-def render_analysis(shortcuts)
+def analysis_text(locale)
+  ja = locale == :ja
+  {
+    title: ja ? "ショートカット解析" : "Shortcut Analysis",
+    total: ja ? "合計" : "total",
+    enabled: ja ? "有効" : "enabled",
+    disabled: ja ? "無効/デフォルト" : "disabled/default",
+    same_scope_count: ja ? "同一スコープ内の有効な重複" : "duplicate active shortcuts in same scope",
+    cross_scope_count: ja ? "スコープをまたぐ有効な重複" : "duplicate active shortcuts across scopes",
+    all_dup_count: ja ? "無効/デフォルトを含む重複" : "duplicate shortcuts including disabled/defaults",
+    possible_count: ja ? "無効/デフォルトを含む潜在的な衝突" : "possible overlaps including disabled/defaults",
+    xremap_count: ja ? "参考: スコープ付き xremap の重なり" : "reference scoped xremap overlaps",
+    same_scope: ja ? "同一スコープ内の重複" : "Same-scope duplicates",
+    same_scope_empty: ja ? "同一スコープ内の有効な重複は見つかりませんでした。" : "No enabled duplicates found in the same scope.",
+    in_scope: ja ? "in" : "in",
+    cross_scope: ja ? "スコープをまたぐ重複" : "Cross-scope duplicates",
+    cross_scope_empty: ja ? "スコープをまたぐ有効な重複は見つかりませんでした。" : "No enabled duplicates found across scopes.",
+    all_dup: ja ? "無効/デフォルトを含む重複" : "Duplicates including disabled/defaults",
+    all_dup_empty: ja ? "無効/デフォルトを含めても重複は見つかりませんでした。" : "No duplicates found when disabled/default entries are included.",
+    possible: ja ? "無効/デフォルトを含む潜在的な衝突" : "Potential overlaps including disabled/defaults",
+    possible_empty: ja ? "無効/デフォルトを含めたスコープ間の衝突は見つかりませんでした。" : "No cross-scope overlaps found when disabled/default entries are included.",
+    available: ja ? "利用可能なグローバル候補" : "Available global candidates",
+    candidate_space: ja ? "候補範囲: #{COMMON_MOD_SETS.join(', ')} x #{COMMON_KEYS.length} 個の一般的なキー。これは実用的な探索範囲であり、ここにないキーがすべてグローバルに安全であることを証明するものではありません。" : "Candidate space: #{COMMON_MOD_SETS.join(', ')} x #{COMMON_KEYS.length} common keys. This is a practical search space, not proof that every omitted key is globally safe.",
+    xremap: ja ? "参考: スコープ付き xremap の重なり" : "Reference: scoped xremap overlaps",
+    xremap_note: ja ? "`only` や `not` などの xremap アプリケーションスコープを使っているため、通常は意図的な設定です。通常のスコープ間重複としては数えません。" : "These entries use xremap application scopes such as `only` and `not`, so they are usually intentional and are not counted as ordinary cross-scope duplicates.",
+    xremap_empty: ja ? "スコープ付き xremap の重なりは見つかりませんでした。" : "No scoped xremap overlaps found."
+  }
+end
+
+def render_analysis(shortcuts, locale: :en)
+  text = analysis_text(locale)
   active_duplicates = grouped_duplicates(shortcuts, scoped: true)
   all_cross_scope_duplicates = grouped_duplicates(shortcuts, scoped: false)
                                .select { |_key, members| members.map(&:scope).uniq.length > 1 }
@@ -525,33 +555,33 @@ def render_analysis(shortcuts)
   global_available = available_shortcuts(shortcuts)
 
   lines = []
-  lines << "# Shortcut Analysis"
+  lines << "# #{text[:title]}"
   lines << ""
-  lines << "- total: #{shortcuts.length}"
-  lines << "- enabled: #{shortcuts.count(&:enabled)}"
-  lines << "- disabled/default: #{shortcuts.count { |shortcut| !shortcut.enabled }}"
-  lines << "- duplicate active shortcuts in same scope: #{active_duplicates.length}"
-  lines << "- duplicate active shortcuts across scopes: #{cross_scope_duplicates.length}"
-  lines << "- duplicate shortcuts including disabled/defaults: #{all_duplicates.length}"
-  lines << "- possible overlaps including disabled/defaults: #{possible_overlaps.length}"
-  lines << "- reference scoped xremap overlaps: #{xremap_scoped_overlaps.length}"
+  lines << "- #{text[:total]}: #{shortcuts.length}"
+  lines << "- #{text[:enabled]}: #{shortcuts.count(&:enabled)}"
+  lines << "- #{text[:disabled]}: #{shortcuts.count { |shortcut| !shortcut.enabled }}"
+  lines << "- #{text[:same_scope_count]}: #{active_duplicates.length}"
+  lines << "- #{text[:cross_scope_count]}: #{cross_scope_duplicates.length}"
+  lines << "- #{text[:all_dup_count]}: #{all_duplicates.length}"
+  lines << "- #{text[:possible_count]}: #{possible_overlaps.length}"
+  lines << "- #{text[:xremap_count]}: #{xremap_scoped_overlaps.length}"
   lines << ""
-  lines << "## Same-scope duplicates"
+  lines << "## #{text[:same_scope]}"
   lines << ""
   if active_duplicates.empty?
-    lines << "No enabled duplicates found in the same scope."
+    lines << text[:same_scope_empty]
   else
     active_duplicates.each do |(scope, key), members|
-      lines << "### `#{key}` in `#{scope}`"
+      lines << "### `#{key}` #{text[:in_scope]} `#{scope}`"
       members.each { |shortcut| lines << shortcut_label(shortcut) }
       lines << ""
     end
   end
   lines << ""
-  lines << "## Cross-scope duplicates"
+  lines << "## #{text[:cross_scope]}"
   lines << ""
   if cross_scope_duplicates.empty?
-    lines << "No enabled duplicates found across scopes."
+    lines << text[:cross_scope_empty]
   else
     cross_scope_duplicates.each do |key, members|
       next if members.map(&:scope).uniq.length < 2
@@ -562,22 +592,22 @@ def render_analysis(shortcuts)
     end
   end
   lines << ""
-  lines << "## Duplicates including disabled/defaults"
+  lines << "## #{text[:all_dup]}"
   lines << ""
   if all_duplicates.empty?
-    lines << "No duplicates found when disabled/default entries are included."
+    lines << text[:all_dup_empty]
   else
     all_duplicates.each do |(scope, key), members|
-      lines << "### `#{key}` in `#{scope}`"
+      lines << "### `#{key}` #{text[:in_scope]} `#{scope}`"
       members.each { |shortcut| lines << shortcut_label(shortcut) }
       lines << ""
     end
   end
   lines << ""
-  lines << "## Potential overlaps including disabled/defaults"
+  lines << "## #{text[:possible]}"
   lines << ""
   if possible_overlaps.empty?
-    lines << "No cross-scope overlaps found when disabled/default entries are included."
+    lines << text[:possible_empty]
   else
     possible_overlaps.each do |key, members|
       lines << "### `#{key}`"
@@ -585,18 +615,18 @@ def render_analysis(shortcuts)
       lines << ""
     end
   end
-  lines << "## Available global candidates"
+  lines << "## #{text[:available]}"
   lines << ""
-  lines << "Candidate space: #{COMMON_MOD_SETS.join(', ')} x #{COMMON_KEYS.length} common keys. This is a practical search space, not proof that every omitted key is globally safe."
+  lines << text[:candidate_space]
   lines << ""
   global_available.each { |shortcut| lines << "- `#{shortcut}`" }
   lines << ""
-  lines << "## Reference: scoped xremap overlaps"
+  lines << "## #{text[:xremap]}"
   lines << ""
-  lines << "These entries use xremap application scopes such as `only` and `not`, so they are usually intentional and are not counted as ordinary cross-scope duplicates."
+  lines << text[:xremap_note]
   lines << ""
   if xremap_scoped_overlaps.empty?
-    lines << "No scoped xremap overlaps found."
+    lines << text[:xremap_empty]
   else
     xremap_scoped_overlaps.each do |key, members|
       lines << "### `#{key}`"
@@ -898,7 +928,8 @@ options = {
   catalog: DEFAULT_CATALOG,
   html: "shortcut_report.html",
   json: nil,
-  analysis: nil
+  analysis: nil,
+  analysis_ja: nil
 }
 
 OptionParser.new do |parser|
@@ -911,6 +942,7 @@ OptionParser.new do |parser|
   parser.on("--html PATH", "Write searchable HTML report") { |value| options[:html] = value }
   parser.on("--json PATH", "Write collected data as JSON") { |value| options[:json] = value }
   parser.on("--analysis PATH", "Write duplicate/free-candidate analysis as Markdown") { |value| options[:analysis] = value }
+  parser.on("--analysis-ja PATH", "Write Japanese duplicate/free-candidate analysis as Markdown") { |value| options[:analysis_ja] = value }
   parser.on("--no-html", "Do not write HTML") { options[:html] = nil }
 end.parse!
 
@@ -931,7 +963,13 @@ if options[:analysis]
   File.write(options[:analysis], render_analysis(shortcuts))
 end
 
+if options[:analysis_ja]
+  FileUtils.mkdir_p(File.dirname(options[:analysis_ja])) unless File.dirname(options[:analysis_ja]) == "."
+  File.write(options[:analysis_ja], render_analysis(shortcuts, locale: :ja))
+end
+
 puts "Collected #{shortcuts.length} shortcuts"
 puts "HTML: #{options[:html]}" if options[:html]
 puts "JSON: #{options[:json]}" if options[:json]
 puts "Analysis: #{options[:analysis]}" if options[:analysis]
+puts "Analysis JA: #{options[:analysis_ja]}" if options[:analysis_ja]

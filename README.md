@@ -45,7 +45,7 @@ source / scope のチップをクリックすると、その条件で絞り込�
 ショートカット単位で重複や空き候補を確認したい場合は、Markdown の解析レポートも出力できます。
 
 ```sh
-ruby shortcut_app.rb --json shortcut_report.json --analysis shortcut_analysis.md
+ruby shortcut_app.rb --json shortcut_report.json --analysis shortcut_analysis.md --analysis-ja shortcut_analysis.ja.md
 ```
 
 解析レポートでは、表記ゆれを正規化したうえで、同一スコープ内の有効な重複、スコープをまたぐ重複、無効化された kitty デフォルトを含めた重複、`SUPER` 系の実用的な空き候補を確認できます。
