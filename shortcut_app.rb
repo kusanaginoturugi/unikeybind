@@ -499,6 +499,11 @@ def grouped_duplicates(shortcuts, include_disabled: false, scoped: true)
         .sort_by { |key, members| [key.to_s, members.length] }
 end
 
+def scoped_xremap_overlap?(members)
+  members.all? { |shortcut| shortcut.source == "xremap" } &&
+    members.any? { |shortcut| shortcut.scope.start_with?("only:", "not:") }
+end
+
 def available_shortcuts(shortcuts, scope: "global", limit: 80)
   used = shortcuts.select { |shortcut| shortcut.enabled && shortcut.scope == scope }
                   .map { |shortcut| normalize_shortcut(shortcut.shortcut) }
@@ -509,11 +514,14 @@ end
 
 def render_analysis(shortcuts)
   active_duplicates = grouped_duplicates(shortcuts, scoped: true)
-  cross_scope_duplicates = grouped_duplicates(shortcuts, scoped: false)
-                             .select { |_key, members| members.map(&:scope).uniq.length > 1 }
+  all_cross_scope_duplicates = grouped_duplicates(shortcuts, scoped: false)
+                               .select { |_key, members| members.map(&:scope).uniq.length > 1 }
+  xremap_scoped_overlaps = all_cross_scope_duplicates.select { |_key, members| scoped_xremap_overlap?(members) }
+  cross_scope_duplicates = all_cross_scope_duplicates.reject { |_key, members| scoped_xremap_overlap?(members) }
   all_duplicates = grouped_duplicates(shortcuts, include_disabled: true, scoped: true)
   possible_overlaps = grouped_duplicates(shortcuts, include_disabled: true, scoped: false)
                       .select { |_key, members| members.map(&:scope).uniq.length > 1 }
+                      .reject { |_key, members| scoped_xremap_overlap?(members) }
   global_available = available_shortcuts(shortcuts)
 
   lines = []
@@ -526,6 +534,7 @@ def render_analysis(shortcuts)
   lines << "- duplicate active shortcuts across scopes: #{cross_scope_duplicates.length}"
   lines << "- duplicate shortcuts including disabled/defaults: #{all_duplicates.length}"
   lines << "- possible overlaps including disabled/defaults: #{possible_overlaps.length}"
+  lines << "- reference scoped xremap overlaps: #{xremap_scoped_overlaps.length}"
   lines << ""
   lines << "## Same-scope duplicates"
   lines << ""
@@ -576,12 +585,25 @@ def render_analysis(shortcuts)
       lines << ""
     end
   end
-  lines << ""
   lines << "## Available global candidates"
   lines << ""
   lines << "Candidate space: #{COMMON_MOD_SETS.join(', ')} x #{COMMON_KEYS.length} common keys. This is a practical search space, not proof that every omitted key is globally safe."
   lines << ""
   global_available.each { |shortcut| lines << "- `#{shortcut}`" }
+  lines << ""
+  lines << "## Reference: scoped xremap overlaps"
+  lines << ""
+  lines << "These entries use xremap application scopes such as `only` and `not`, so they are usually intentional and are not counted as ordinary cross-scope duplicates."
+  lines << ""
+  if xremap_scoped_overlaps.empty?
+    lines << "No scoped xremap overlaps found."
+  else
+    xremap_scoped_overlaps.each do |key, members|
+      lines << "### `#{key}`"
+      members.each { |shortcut| lines << shortcut_label(shortcut) }
+      lines << ""
+    end
+  end
   lines << ""
   lines.join("\n")
 end

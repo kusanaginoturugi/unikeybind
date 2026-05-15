@@ -1,57 +1,19 @@
 # Shortcut Analysis
 
-- total: 181
-- enabled: 101
+- total: 175
+- enabled: 95
 - disabled/default: 80
-- duplicate active shortcuts in same scope: 4
-- duplicate active shortcuts across scopes: 8
-- duplicate shortcuts including disabled/defaults: 4
-- possible overlaps including disabled/defaults: 11
+- duplicate active shortcuts in same scope: 0
+- duplicate active shortcuts across scopes: 2
+- duplicate shortcuts including disabled/defaults: 0
+- possible overlaps including disabled/defaults: 5
+- reference scoped xremap overlaps: 6
 
 ## Same-scope duplicates
 
-### `SUPER+J` in `global`
-- `SUPER+J` -> layoutmsg togglesplit (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:275)
-- `SUPER+j` -> movefocus d (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:286)
-
-### `SUPER+L` in `global`
-- `SUPER+L` -> exec dms ipc call lock lock (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:431)
-- `SUPER+l` -> movefocus r (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:284)
-
-### `XF86AUDIOLOWERVOLUME` in `global`
-- `XF86AudioLowerVolume` -> exec dms ipc call audio decrement 3 (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:438)
-- `XF86AudioLowerVolume` -> exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:331)
-
-### `XF86AUDIORAISEVOLUME` in `global`
-- `XF86AudioRaiseVolume` -> exec dms ipc call audio increment 3 (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:437)
-- `XF86AudioRaiseVolume` -> exec wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+ (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:330)
-
+No enabled duplicates found in the same scope.
 
 ## Cross-scope duplicates
-
-### `CTRL+A`
-- `C-a` -> home (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
-- `C-a` -> home (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
-
-### `CTRL+B`
-- `C-b` -> left (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
-- `C-b` -> left (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
-
-### `CTRL+E`
-- `C-e` -> end (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
-- `C-e` -> end (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
-
-### `CTRL+H`
-- `C-h` -> backspace (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
-- `C-h` -> backspace (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
-
-### `CTRL+N`
-- `C-n` -> down (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
-- `C-n` -> down (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
-
-### `CTRL+P`
-- `C-p` -> up (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
-- `C-p` -> up (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
 
 ### `DOWN`
 - `Down` -> CursorDown 0 (fcitx5, ime addon, enabled, ~/.config/fcitx5/conf/skk.conf:30 / CursorDown)
@@ -64,48 +26,9 @@
 
 ## Duplicates including disabled/defaults
 
-### `SUPER+J` in `global`
-- `SUPER+J` -> layoutmsg togglesplit (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:275)
-- `SUPER+j` -> movefocus d (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:286)
-
-### `SUPER+L` in `global`
-- `SUPER+L` -> exec dms ipc call lock lock (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:431)
-- `SUPER+l` -> movefocus r (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:284)
-
-### `XF86AUDIOLOWERVOLUME` in `global`
-- `XF86AudioLowerVolume` -> exec dms ipc call audio decrement 3 (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:438)
-- `XF86AudioLowerVolume` -> exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:331)
-
-### `XF86AUDIORAISEVOLUME` in `global`
-- `XF86AudioRaiseVolume` -> exec dms ipc call audio increment 3 (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:437)
-- `XF86AudioRaiseVolume` -> exec wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+ (hyprland, global, enabled, ~/.config/hypr/hyprland.conf:330)
-
+No duplicates found when disabled/default entries are included.
 
 ## Potential overlaps including disabled/defaults
-
-### `CTRL+A`
-- `C-a` -> home (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
-- `C-a` -> home (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
-
-### `CTRL+B`
-- `C-b` -> left (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
-- `C-b` -> left (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
-
-### `CTRL+E`
-- `C-e` -> end (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
-- `C-e` -> end (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
-
-### `CTRL+H`
-- `C-h` -> backspace (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
-- `C-h` -> backspace (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
-
-### `CTRL+N`
-- `C-n` -> down (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
-- `C-n` -> down (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
-
-### `CTRL+P`
-- `C-p` -> up (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
-- `C-p` -> up (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
 
 ### `CTRL+SEMICOLON`
 - `Control+semicolon` -> open clipboard history (fcitx5-default, ime addon default, disabled, ~/src/unikeybind/shortcut_catalog.yaml / Known fcitx5 Clipboard add-on default; local ~/.config/fcitx5/conf/clipboard.conf may override it)
@@ -127,7 +50,6 @@
 - `Up` -> CursorUp 0 (fcitx5, ime addon, enabled, ~/.config/fcitx5/conf/skk.conf:27 / CursorUp)
 - `Up` -> Hotkey/PrevPage 0 (fcitx5, ime hotkey, enabled, ~/.config/fcitx5/config:26 / Hotkey/PrevPage)
 
-
 ## Available global candidates
 
 Candidate space: SUPER, SUPER+SHIFT, SUPER+CTRL, SUPER+ALT x 56 common keys. This is a practical search space, not proof that every omitted key is globally safe.
@@ -137,7 +59,9 @@ Candidate space: SUPER, SUPER+SHIFT, SUPER+CTRL, SUPER+ALT x 56 common keys. Thi
 - `SUPER+C`
 - `SUPER+F`
 - `SUPER+G`
+- `SUPER+H`
 - `SUPER+I`
+- `SUPER+K`
 - `SUPER+N`
 - `SUPER+O`
 - `SUPER+U`
@@ -210,5 +134,32 @@ Candidate space: SUPER, SUPER+SHIFT, SUPER+CTRL, SUPER+ALT x 56 common keys. Thi
 - `SUPER+CTRL+C`
 - `SUPER+CTRL+D`
 - `SUPER+CTRL+E`
-- `SUPER+CTRL+F`
-- `SUPER+CTRL+G`
+
+## Reference: scoped xremap overlaps
+
+These entries use xremap application scopes such as `only` and `not`, so they are usually intentional and are not counted as ordinary cross-scope duplicates.
+
+### `CTRL+A`
+- `C-a` -> home (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
+- `C-a` -> home (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
+
+### `CTRL+B`
+- `C-b` -> left (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
+- `C-b` -> left (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
+
+### `CTRL+E`
+- `C-e` -> end (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
+- `C-e` -> end (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
+
+### `CTRL+H`
+- `C-h` -> backspace (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
+- `C-h` -> backspace (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
+
+### `CTRL+N`
+- `C-n` -> down (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
+- `C-n` -> down (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
+
+### `CTRL+P`
+- `C-p` -> up (xremap, not: emacs, kitty, dropdown, alacritty, foot, firefox, chromium, code-oss, org.remmina.Remmina, qemu, enabled, ~/.config/xremap/config.yaml / Global Emacs)
+- `C-p` -> up (xremap, only: firefox, chromium, enabled, ~/.config/xremap/config.yaml / Browser Emacs Navigation)
+
