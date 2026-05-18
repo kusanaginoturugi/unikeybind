@@ -9,7 +9,7 @@ Linuxデスクトップのキーバインド統一を目的とする。以下の
 
 ## 2. 技術選定：なぜ `xremap` なのか
 
-当初 `keyd` を検討したが、アプリ別コンテキスト切り替えに使う `keyd-application-mapper` がWaylandネイティブウィンドウを検出できないことが判明（X11の `xprop` 依存、GitHub issue #694）。
+当初 `keyd` を検討したが、アプリ別コンテキスト切り替えに使う `keyd-application-mapper` がWaylandネイティブウィンドウを検出できないことが判明（X11の `xprop` 依存、GitHub issue #694 [https://github.com/rvaiya/keyd/issues/694]）。
 
 Hyprland（pure Wayland）環境では `keyd` はグローバルリマップのみ有効で、Phase 2以降の実現手段がない。
 
