@@ -133,6 +133,55 @@ systemctl --user restart xremap.service
 journalctl --user -u xremap.service -f
 ```
 
+### xremap 起動後にキーボード入力できなくなる場合
+
+`--device` を指定せずに `--watch=device` で起動すると、xremap が入力デバイスを自動選択する。環境によっては、xremap 自身が作った仮想デバイスも再選択候補に見え、デバイスの再検出時に入力が不安定になることがある。
+
+ログに以下のような行がある場合は、このパターンを疑う。
+
+```text
+Selected keyboards automatically since --device options weren't specified:
+warning: Failed to grab device 'Yushakobo Helix Beta' ... Error: Resource busy
+/dev/input/event15: xremap
+/dev/input/event16: xremap pid=...
+Found a removed device. Reselecting devices.
+Failed to ungrab device 'xremap' ... No such device
+```
+
+対策として、物理キーボードを明示して起動する。
+
+```ini
+# ~/.config/systemd/user/xremap.service
+ExecStart=/usr/bin/xremap --watch=config,device --device "Yushakobo Helix Beta" %h/.config/xremap/config.yaml
+```
+
+ホットプラグ監視が不要なら、より安定寄りに `device` の watch を外す。
+
+```ini
+ExecStart=/usr/bin/xremap --watch=config --device "Yushakobo Helix Beta" %h/.config/xremap/config.yaml
+```
+
+反映:
+
+```sh
+systemctl --user daemon-reload
+systemctl --user restart xremap.service
+```
+
+`Resource busy` が残る場合は、別プロセスが同じキーボードを掴んでいる可能性がある。二重起動や他のキーマッパーを確認する。
+
+```sh
+pgrep -af 'xremap|keyd|kanata|kmonad|input-remapper'
+```
+
+重複した xremap があれば停止してから起動し直す。
+
+```sh
+systemctl --user stop xremap.service
+pkill xremap
+systemctl --user start xremap.service
+```
+
 ### Firefox で `j/k` が効かない場合
 
 現行設定では Firefox / Chromium は xremap の単キーvi対象にしていない。ブラウザは入力欄やWebアプリとの競合が大きいため、`j/k` スクロールは Vimium などのブラウザ拡張に任せる方針。
