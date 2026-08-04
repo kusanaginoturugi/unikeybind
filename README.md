@@ -16,8 +16,9 @@ Linuxデスクトップのキーバインドを、用途ごとに一貫した操
 4. [xremap.service](xremap.service) - systemd user service の雛形
 5. [firefox_keybind_conflicts.md](firefox_keybind_conflicts.md) - FirefoxショートカットとEmacs/vi操作の衝突検討表
 6. [skk_fcitx5_notes.md](skk_fcitx5_notes.md) - SKK と fcitx5 のキー衝突回避メモ
-7. [verification_log.md](verification_log.md) - 実機で確認したウィンドウクラスとデバイス
-8. [linux_desktop_keybind_plan_archive_keyd.md](linux_desktop_keybind_plan_archive_keyd.md) - 旧 `keyd` 案のアーカイブ
+7. [terminal_line_editing_notes.md](terminal_line_editing_notes.md) - 端末の行編集、kill-ring、clipboard 連携メモ
+8. [verification_log.md](verification_log.md) - 実機で確認したウィンドウクラスとデバイス
+9. [linux_desktop_keybind_plan_archive_keyd.md](linux_desktop_keybind_plan_archive_keyd.md) - 旧 `keyd` 案のアーカイブ
 
 `keyd` はグローバルなリマップには有力ですが、Hyprland の pure Wayland 環境でアプリ別コンテキスト切り替えを行う用途には制約があります。そのため、このリポジトリでは `xremap --features hypr` を本線として扱います。
 

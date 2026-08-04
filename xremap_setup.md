@@ -50,12 +50,31 @@ Hyprland側に `exec-once = xremap ...` を書いている場合は、二重起�
 # exec-once = xremap --watch=config,device ~/.config/xremap/config.yaml
 ```
 
-アプリ別条件が効かない場合は、systemd user service から Hyprland の環境変数が見えていない可能性がある。その場合は Hyprland 起動時に以下のような環境変数 import を検討する。
+アプリ別条件が効かない場合は、systemd user service から Hyprland の環境変数が見えていない可能性がある。
+
+uwsm を使っていない場合は、Hyprland 起動時に以下のような環境変数 import を検討する。
 
 ```ini
 # hyprland.conf
 exec-once = systemctl --user import-environment WAYLAND_DISPLAY HYPRLAND_INSTANCE_SIGNATURE XDG_CURRENT_DESKTOP
 ```
+
+uwsm を使っている場合は、`hyprland.conf` に import を書くより、uwsm が systemd user 環境を管理していることを前提に確認する。`HYPRLAND_INSTANCE_SIGNATURE` や `WAYLAND_DISPLAY` はセッションごとに変わるため、固定値として `~/.config/uwsm/env` に書かない。
+
+```sh
+systemctl --user show-environment | rg -U 'WAYLAND_DISPLAY|HYPRLAND_INSTANCE_SIGNATURE|XDG_CURRENT_DESKTOP|XDG_SESSION_DESKTOP'
+```
+
+期待する例:
+
+```text
+HYPRLAND_INSTANCE_SIGNATURE=...
+WAYLAND_DISPLAY=wayland-1
+XDG_CURRENT_DESKTOP=Hyprland
+XDG_SESSION_DESKTOP=Hyprland
+```
+
+`~/.config/uwsm/env` や `~/.config/uwsm/env-hyprland` には、カーソル設定や toolkit 系などの固定的な環境変数を書く。Hyprland が起動時に生成する値は uwsm に任せる。
 
 アクティブウィンドウのクラス名確認:
 ```sh
@@ -132,6 +151,38 @@ systemd user service の確認:
 systemctl --user restart xremap.service
 journalctl --user -u xremap.service -f
 ```
+
+### kitty で `C-a` / `C-e` が効かない場合
+
+kitty ではシェルや端末アプリ本来のキー操作を優先するため、`application.not` に `kitty` を入れて xremap の Emacs 風リマップから除外する。
+
+```yaml
+application:
+  not: [Emacs, emacs, kitty, alacritty, foot, Alacritty]
+```
+
+`C-a` / `C-e` が kitty 上で行頭・行末移動として効かない場合は、まず xremap が kitty を正しく認識しているか確認する。
+
+```sh
+journalctl --user -u xremap.service -f
+```
+
+kitty にフォーカスしたときに以下が出れば、Hyprland のアプリ判定は動作している。
+
+```text
+application-client: Hypr (supported: true)
+application: kitty
+```
+
+この状態なら `application.not: [kitty, ...]` は効くはずなので、xremap よりも shell / readline / tmux / zellij / 端末内アプリ側のキーバインドを疑う。
+
+切り分けとして、一時的に xremap を止めて確認する。
+
+```sh
+systemctl --user stop xremap.service
+```
+
+xremap 停止中も症状が変わらない場合、原因は xremap ではない。停止中は直る場合は、ログに出ている `application: ...` の表記を `application.not` に追加する。
 
 ### xremap 起動後にキーボード入力できなくなる場合
 
