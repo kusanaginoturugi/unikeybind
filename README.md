@@ -60,3 +60,4 @@ GTK の Emoji chooser や fcitx5 Clipboard アドオンの既知デフォルト�
 - ターミナル、Emacs、仮想マシンなどはアプリ本来のキー操作を優先する
 - ブラウザやビューアの vi風操作は、入力欄との競合を避けながら段階的に導入する
 - xremap は Hyprland の `exec-once` ではなく、systemd user service で常駐管理する
+=======
