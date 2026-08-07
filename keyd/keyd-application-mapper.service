@@ -1,0 +1,14 @@
+[Unit]
+Description=keyd application mapper
+Documentation=https://github.com/rvaiya/keyd
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/keyd-application-mapper -v
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=default.target
